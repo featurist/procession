@@ -13,6 +13,7 @@ module Procession
     def start
       args = @command.split(' ')
       @proc = ChildProcess.build(*args)
+      @proc.leader = true
 
       setup_cwd
       setup_environment
