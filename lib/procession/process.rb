@@ -7,6 +7,7 @@ module Procession
       @await = options.delete(:await)
       @working_dir = options.delete(:working_dir)
       @environment = options.delete(:environment)
+      @inherit_output = options.delete(:inherit_output)
     end
 
     def start
@@ -29,7 +30,7 @@ module Procession
         started = false
         until started
           partial = r.readpartial(8192)
-          puts partial if ENV['CAPPIE_DEBUG']
+          puts partial if @inherit_output
           all_output << partial
           if (all_output =~ @await)
             started = true
@@ -42,7 +43,7 @@ module Procession
       Thread.new do
         while true
           partial = r.readpartial(8192)
-          puts partial if ENV['CAPPIE_DEBUG']
+          puts partial if @inherit_output
         end
       end
 
