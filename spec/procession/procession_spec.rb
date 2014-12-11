@@ -8,6 +8,10 @@ module Procession
       File.join(File.dirname(__FILE__), "example_app.rb")
     end
 
+    def example_app_with_child_path
+      File.join(File.dirname(__FILE__), "example_app_with_child.rb")
+    end
+
     it 'runs a process and awaits some output' do
       process = Process.new(command: "ruby #{example_app_path}", await: /#{Dir.pwd}/).start
       process.should be_alive
@@ -27,6 +31,17 @@ module Procession
         process.should be_alive
         process.stop
       end
+    end
+
+    it 'kills the whole process tree' do
+      temp_path = File.join(File.dirname(__FILE__), "delete_me.txt")
+      File.delete(temp_path) if File.exist?(temp_path)
+      process = Process.new(command: "ruby #{example_app_with_child_path}",
+                              await: /Starting child app/).start
+      sleep 0.2
+      process.stop
+      sleep 0.4
+      expect(File.exist?(temp_path)).to be_false
     end
 
     describe 'when the process exits' do

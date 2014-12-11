@@ -20,7 +20,7 @@ module Procession
       r, w = IO.pipe
 
       @proc.io.stdout = @proc.io.stderr = w
-
+      @proc.leader = true
       @proc.start
       w.close
 
