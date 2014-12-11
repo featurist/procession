@@ -14,7 +14,8 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
 
   s.add_runtime_dependency 'childprocess', '>= 0.3.8'
-  
+
+  s.add_development_dependency 'rspec-core', '>= 3.1.0'
   s.add_development_dependency 'rspec-expectations', '>= 2.0.1'
   s.add_development_dependency 'rack', '>= 1.5.2'
 

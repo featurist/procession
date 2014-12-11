@@ -8,7 +8,7 @@ module Procession
       @working_dir = options.delete(:working_dir)
       @environment = options.delete(:environment)
     end
-    
+
     def start
       args = @command.split(' ')
       @proc = ChildProcess.build(*args)
@@ -19,12 +19,12 @@ module Procession
       r, w = IO.pipe
 
       @proc.io.stdout = @proc.io.stderr = w
-    
+
       @proc.start
       w.close
-    
+
       all_output = ""
-    
+
       begin
         started = false
         until started
@@ -38,20 +38,20 @@ module Procession
       rescue EOFError
         raise ProcessExitedError.new "The app process exited\nSTDOUT:\n#{all_output}"
       end
-      
+
       Thread.new do
         while true
           partial = r.readpartial(8192)
           puts partial if ENV['CAPPIE_DEBUG']
         end
       end
-      
+
       at_exit do
         @proc.stop
       end
-      
+
       @proc.io.inherit!
-      
+
       @proc
     end
 
@@ -65,6 +65,6 @@ module Procession
       @proc.cwd = @working_dir unless @working_dir.nil?
     end
   end
-  
+
   class ProcessExitedError < RuntimeError; end
 end
